@@ -31,5 +31,19 @@ describe Imagecr do
 
       image.should eq(Imagecr::Image.new(10, 10, "tiff"))
     end
+
+    describe "from http" do
+      it "works for http" do
+        image = Imagecr.open("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png");
+
+        image.should eq(Imagecr::Image.new(544, 184, "png"))
+      end
+
+      it "gives nil on 404" do
+        image = Imagecr.open("https://www.google.com/images/branding/googlelogo/asdasd.png");
+
+        image.should eq(nil)
+      end
+    end
   end
 end

@@ -1,5 +1,4 @@
 require "../spec_helper"
-require "secure_random"
 
 module Imagecr
   describe Image do

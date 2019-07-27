@@ -1,5 +1,5 @@
 require "../spec_helper"
-require "secure_random"
+require "uuid"
 
 module Imagecr
   describe Engine do
@@ -9,7 +9,7 @@ module Imagecr
 
     describe "open" do
       it "can open local files" do
-        path = "/tmp/#{SecureRandom.uuid}"
+        path = "/tmp/#{UUID.random}"
         File.write(path, "test")
 
         engine = Engine.new
