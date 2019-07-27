@@ -1,4 +1,5 @@
 # imagecr
+[![Build Status](https://travis-ci.org/taylorfinnell/imagecr.svg?branch=master)](https://travis-ci.org/taylorfinnell/imagecr)
 
 Image.cr is a shard to quickly and performantly identify an image type and basic
 attributes of the image.
