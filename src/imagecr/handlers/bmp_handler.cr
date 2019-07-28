@@ -16,18 +16,22 @@ module Imagecr
 
         header = handle_eof { io.read_bytes(Int32) }
 
+        width, height = nil, nil
+
         case header
         when 12
           width = handle_eof { io.read_bytes(UInt16) }
           height = handle_eof { io.read_bytes(UInt16) }
-
-          Image.new(width.to_i32, height.to_i32, "bmp") if width && height
         when 40
           width = handle_eof { io.read_bytes(Int32, IO::ByteFormat::LittleEndian) }
           height = handle_eof { io.read_bytes(Int32, IO::ByteFormat::LittleEndian) }
+        end
 
+        if width.nil? || height.nil?
+          raise SizeNotFound.new if @options.raise_on_exception
+        else
           # ImageHeight is expressed in pixels. The absolute value is necessary because ImageHeight can be negative
-          Image.new(width.to_i32, height.to_i32.abs, "bmp") if width && height
+          Image.new(width.not_nil!.to_i32, height.not_nil!.to_i32.abs, "bmp")
         end
       end
 

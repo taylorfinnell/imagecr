@@ -111,6 +111,41 @@ module Imagecr::Handlers
 
         handler.parse.should be_nil
       end
+
+      describe "on Option#raise_on_exception" do
+        it "raises if missing width" do
+          handler = BmpHandler.new(
+            bytes_io(
+              1, 1, 1,     # bmp size, 1 byte already has been read
+              1, 1, 1, 1,  # reserved
+              1, 1, 1, 1,  # offset
+              12, 0, 0, 0, # header size for os/2
+            ),
+            Options.new(raise_on_exception: true)
+          )
+
+          expect_raises Imagecr::SizeNotFound do
+            handler.parse
+          end
+        end
+
+        it "raises if missing height" do
+          handler = BmpHandler.new(
+            bytes_io(
+              1, 1, 1,     # bmp size, 1 byte already has been read
+              1, 1, 1, 1,  # reserved
+              1, 1, 1, 1,  # offset
+              12, 0, 0, 0, # header size for os/2
+              10, 0        # w
+            ),
+            Options.new(raise_on_exception: true)
+          )
+
+          expect_raises Imagecr::SizeNotFound do
+            handler.parse
+          end
+        end
+      end
     end
   end
 end

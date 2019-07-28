@@ -20,7 +20,11 @@ module Imagecr
           io.read_bytes(Int16)
         end
 
-        Image.new(width.not_nil!.to_i32, height.not_nil!.to_i32, "gif") if width && height
+        if width.nil? || height.nil?
+          raise SizeNotFound.new if @options.raise_on_exception
+        else
+          Image.new(width.not_nil!.to_i32, height.not_nil!.to_i32, "gif")
+        end
       end
 
       def verify_remaining_header

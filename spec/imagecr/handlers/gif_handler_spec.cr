@@ -60,6 +60,31 @@ module Imagecr::Handlers
 
         handler.parse.should eq(Image.new(10, 10, "gif"))
       end
+
+      describe "with Options#raise_on_exception" do
+        it "raises if missing width" do
+          handler = GifHandler.new(
+            bytes_io(
+              56, 57, 97,
+            ), Options.new(raise_on_exception: true))
+
+          expect_raises SizeNotFound do
+            handler.parse
+          end
+        end
+
+        it "raises if missing height" do
+          handler = GifHandler.new(
+            bytes_io(
+              56, 57, 97,
+              10, 0, # w
+            ), Options.new(raise_on_exception: true))
+
+          expect_raises SizeNotFound do
+            handler.parse
+          end
+        end
+      end
     end
   end
 end

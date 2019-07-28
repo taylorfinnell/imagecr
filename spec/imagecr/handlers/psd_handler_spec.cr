@@ -58,5 +58,38 @@ module Imagecr::Handlers
 
       handler.parse.should eq(Image.new(10, 10, "psd"))
     end
+
+    describe "with Options#raise_on_exception" do
+      it "raises on missing width" do
+        handler = PsdHandler.new(
+          bytes_io(83,
+                   1, 1,             # version
+                   0, 0, 0, 0, 0, 0, # reserved
+                   1, 1,             # chans
+                  ),
+                  Options.new(raise_on_exception: true)
+        )
+
+        expect_raises SizeNotFound do
+          handler.parse
+        end
+      end
+
+      it "raises on missing height" do
+        handler = PsdHandler.new(
+          bytes_io(83,
+                   1, 1,             # version
+                   0, 0, 0, 0, 0, 0, # reserved
+                   1, 1,             # chans
+                   0, 0, 0, 10,
+                  ),
+                  Options.new(raise_on_exception: true)
+        )
+
+        expect_raises SizeNotFound do
+          handler.parse
+        end
+      end
+    end
   end
 end

@@ -126,7 +126,13 @@ describe Imagecr do
   end
 
   pending "test_should_return_nil_if_timeout_occurs"
-  pending "test_should_raise_when_asked_to_when_size_cannot_be_found"
+
+  pending "test_should_raise_when_asked_to_when_size_cannot_be_found" do
+    expect_raises Imagecr::SizeNotFound do
+      Imagecr.size("http://localhost:3000/doesnotexist", Imagecr::Options.new(raise_on_exception: true)).should eq(nil)
+    end
+  end
+
   pending "test_should_raise_when_asked_to_when_timeout_occurs"
   pending "test_should_raise_when_asked_to_when_file_does_not_exist"
   pending "test_should_raise_when_asked_when_image_type_not_known"

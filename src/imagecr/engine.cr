@@ -8,6 +8,9 @@ module Imagecr
     # :nodoc:
     HEADER_LEN = 3
 
+    def initialize(@options : Options = Options.new)
+    end
+
     # Open a file using the given strategy to determine which type of image it
     # is.
     def open(uri : URI, &block)
@@ -35,18 +38,19 @@ module Imagecr
 
       handler = case header_bytes
                 when Handlers::GifHandler::GIF_HEADER
-                  Handlers::GifHandler.new(io)
+                  Handlers::GifHandler.new(io, @options)
                 when Handlers::PngHandler::PNG_HEADER
-                  Handlers::PngHandler.new(io)
+                  Handlers::PngHandler.new(io, @options)
                 else
                   if Handlers::BmpHandler::BITMAP_HEADERS.includes?(header_bytes[0, 2])
-                    Handlers::BmpHandler.new(io)
+                    Handlers::BmpHandler.new(io, @options)
                   elsif Handlers::PsdHandler::PSD_HEADER[0, 3] == header_bytes
-                    Handlers::PsdHandler.new(io)
+                    Handlers::PsdHandler.new(io, @options)
                   elsif Handlers::TiffHandler::TIF_HEADERS.includes?(header_bytes[0, 2])
-                    Handlers::TiffHandler.new(io, header_bytes)
+                    Handlers::TiffHandler.new(io, @options, header_bytes)
                   else
-                    Handlers::UnknownHandler.new(io)
+                    raise UnknownImageType.new if @options.raise_on_exception
+                    Handlers::UnknownHandler.new(io, @options)
                   end
                 end
 

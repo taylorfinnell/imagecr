@@ -103,18 +103,24 @@ module Imagecr
                 case tag.id
                 when 256
                   width = tag.read(io)
-                  if width.is_a?(UInt16)
+                  case width
+                  when .is_a?(UInt16)
                     @width = width.as(UInt16).to_i32
-                  else
+                  when .is_a?(UInt32)
                     @width = width.as(UInt32).to_i32
+                  else
+                    raise SizeNotFound.new if @options.raise_on_exception
                   end
                   @pos += 4
                 when 257
                   height = tag.read(io)
-                  if height.is_a?(UInt16)
+                  case height
+                  when .is_a?(UInt16)
                     @height = height.as(UInt16).to_i32
-                  else
+                  when .is_a?(UInt32)
                     @height = height.as(UInt32).to_i32
+                  else
+                    raise SizeNotFound.new if @options.raise_on_exception
                   end
                   @pos += 4
                 else

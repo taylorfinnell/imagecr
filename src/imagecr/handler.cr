@@ -6,7 +6,7 @@ module Imagecr
     # The image IO, excluding header bytes
     getter io
 
-    def initialize(@io : IO, @header_bytes : Bytes? = nil)
+    def initialize(@io : IO, @options = Options.new, @header_bytes : Bytes? = nil)
     end
 
     # Parse the image, returning an `Image` if one is found.
@@ -20,7 +20,7 @@ module Imagecr
       begin
         yield
       rescue IO::EOFError
-        return nil
+        nil
       end
     end
 

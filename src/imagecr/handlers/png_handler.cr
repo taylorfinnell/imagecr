@@ -22,7 +22,11 @@ module Imagecr
           io.read_bytes(Int32, IO::ByteFormat::BigEndian)
         end
 
-        Image.new(width, height, "png") if width && height
+        if width.nil? || height.nil?
+          raise SizeNotFound.new if @options.raise_on_exception
+        else
+          Image.new(width, height, "png") if width && height
+        end
       end
 
       def verify_remaining_header

@@ -9,7 +9,11 @@ module Imagecr
         height = handle_eof { io.read_bytes(Int32, IO::ByteFormat::BigEndian) }
         width = handle_eof { io.read_bytes(Int32, IO::ByteFormat::BigEndian) }
 
-        Image.new(width, height, "psd") if width && height
+        if width.nil? || height.nil?
+          raise SizeNotFound.new if @options.raise_on_exception
+        else
+          Image.new(width, height, "psd")
+        end
       end
 
       def verify_remaining_header

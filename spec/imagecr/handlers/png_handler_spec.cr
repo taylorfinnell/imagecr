@@ -80,6 +80,35 @@ module Imagecr::Handlers
 
         handler.parse.should eq(Image.new(10, 10, "png"))
       end
+
+      describe "on Options#raise_on_exception" do
+        it "raises on missing width" do
+          handler = PngHandler.new(
+            bytes_io(
+              71, 13, 10, 26, 10, # rest of sig
+              0, 0, 0, 13,        # ihdr len
+              73, 72, 68, 82,     # ihdr
+            ), Options.new(raise_on_exception: true))
+
+          expect_raises SizeNotFound do
+            handler.parse
+          end
+        end
+
+        it "raises on missing height" do
+          handler = PngHandler.new(
+            bytes_io(
+              71, 13, 10, 26, 10, # rest of sig
+              0, 0, 0, 13,        # ihdr len
+              73, 72, 68, 82,     # ihdr
+              0, 0, 0, 10,        # w
+            ), Options.new(raise_on_exception: true))
+
+          expect_raises SizeNotFound do
+            handler.parse
+          end
+        end
+      end
     end
   end
 end
