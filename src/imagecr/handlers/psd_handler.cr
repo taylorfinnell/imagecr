@@ -6,8 +6,8 @@ module Imagecr
       def parse_image
         handle_eof { io.skip(10) }
 
-        width = handle_eof { io.read_bytes(Int32, IO::ByteFormat::BigEndian) }
         height = handle_eof { io.read_bytes(Int32, IO::ByteFormat::BigEndian) }
+        width = handle_eof { io.read_bytes(Int32, IO::ByteFormat::BigEndian) }
 
         Image.new(width, height, "psd") if width && height
       end

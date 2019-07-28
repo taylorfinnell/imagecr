@@ -7,3 +7,10 @@ authors:
 crystal: 0.29.0
 
 license: MIT
+
+development_dependencies:
+  kemal:
+    github: kemalcr/kemal
+  spec-kemal:
+    github: kemalcr/spec-kemal
+    branch: master

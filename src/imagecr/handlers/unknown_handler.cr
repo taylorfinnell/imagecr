@@ -7,7 +7,7 @@ module Imagecr
       end
 
       def verify_remaining_header
-        false
+        nil
       end
     end
   end

@@ -18,4 +18,20 @@ module Imagecr
     engine = Engine.new
     engine.parse(io)
   end
+
+  def self.size(path : String)
+    open(path).try &. size
+  end
+
+  def self.size(io : IO)
+    open(io).try &.size
+  end
+
+  def self.type(path : String)
+    open(path).try &.type
+  end
+
+  def self.type(io : IO)
+    open(io).try &.type
+  end
 end

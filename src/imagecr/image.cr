@@ -13,6 +13,10 @@ module Imagecr
     def initialize(@width : Int32, @height : Int32, @type : String)
     end
 
+    def size
+      [@width, @height]
+    end
+
     def_equals @width, @height, @type
   end
 end

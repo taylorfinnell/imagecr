@@ -14,19 +14,20 @@ module Imagecr
       def parse_image
         handle_eof { io.skip(11) }
 
-        header_size = handle_eof { io.read_bytes(Int32) }
+        header = handle_eof { io.read_bytes(Int32) }
 
-        case header_size
+        case header
         when 12
-          width = handle_eof { io.read_bytes(Int16) }
-          height = handle_eof { io.read_bytes(Int16) }
+          width = handle_eof { io.read_bytes(UInt16) }
+          height = handle_eof { io.read_bytes(UInt16) }
 
           Image.new(width.to_i32, height.to_i32, "bmp") if width && height
         when 40
-          width = handle_eof { io.read_bytes(Int32) }
-          height = handle_eof { io.read_bytes(Int32) }
+          width = handle_eof { io.read_bytes(Int32, IO::ByteFormat::LittleEndian) }
+          height = handle_eof { io.read_bytes(Int32, IO::ByteFormat::LittleEndian) }
 
-          Image.new(width.to_i32, height.to_i32, "bmp") if width && height
+          # ImageHeight is expressed in pixels. The absolute value is necessary because ImageHeight can be negative
+          Image.new(width.to_i32, height.to_i32.abs, "bmp") if width && height
         end
       end
 

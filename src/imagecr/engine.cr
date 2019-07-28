@@ -17,9 +17,11 @@ module Imagecr
                 if uri.scheme == "file" || File.exists?(uri.to_s)
                   LocalFileOpenStrategy.new
                 else
-                  raise PathNotSupportedError.new("#{uri.to_s} is not a supported path")
+                  nil
                 end
               end
+
+      return nil if strat.nil?
 
       strat.open(uri) do |io|
         yield io
